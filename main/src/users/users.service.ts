@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { User } from 'src/schemas/user.schema';
+import { hashString } from 'src/utils/bcrypt';
 
 export type UserTemp = any;
 
@@ -32,8 +33,15 @@ export class UsersService {
   }
 
   async save(user): Promise<User> {
+    const found = await this.connection.collection('users').findOne({ name: user.name });
+    if (found) {
+      throw new BadRequestException('Өмнө бүртгэгдсэн хэрэглэгч байна.');
+    }
+    user.password = await hashString(user.password);
+    console.log('---user---', user)
     const user_new = new User(user);
     await user_new.save()
     return user_new;
   }
+
 }
