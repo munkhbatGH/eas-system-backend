@@ -15,7 +15,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://munkhbatgh.github.io/eas-system-frontend',
+      'https://munkhbatgh.github.io',
     ],
     credentials: true, // if you're sending cookies or auth headers
   });
