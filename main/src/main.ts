@@ -13,7 +13,10 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
 
   app.enableCors({
-    origin: 'http://localhost:3000', // allow your frontend origin
+    origin: [
+      'http://localhost:3000',
+      'https://munkhbatgh.github.io/eas-system-frontend',
+    ],
     credentials: true, // if you're sending cookies or auth headers
   });
 

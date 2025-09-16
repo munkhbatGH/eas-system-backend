@@ -32,3 +32,12 @@ https://docs.nestjs.com/techniques/mongodb
 
 http://localhost:4000/users/register
 - curl -X POST http://localhost:4000/users/register -d '{"name": "user1", "password": "123"}' -H "Content-Type: application/json"
+
+
+## Local backend to INTERNET
+
+Ngrok
+- npm install -g ngrok
+- ngrok config add-authtoken 32lxSZpULp7k1k2tlr2L6ARj1yS_3nvSdsdfv1Wo9mzCmTTgw
+- ngrok http 4000
+    - Forwarding  https://random-subdomain.ngrok.io -> http://localhost:4000
