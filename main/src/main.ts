@@ -12,6 +12,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
 
+  app.enableCors({
+    origin: 'http://localhost:3000', // allow your frontend origin
+    credentials: true, // if you're sending cookies or auth headers
+  });
+
   const config = new DocumentBuilder()
     .addSecurity('basic', {
       type: 'http',
@@ -27,6 +32,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
   });
+  
 
   const configService = app.get(ConfigService);
   console.log(`Server is running on port: ${configService.get<number>('PORT')  || 4000}`);
