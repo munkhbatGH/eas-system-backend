@@ -1,12 +1,7 @@
 
-## NESTJS
+## NODE VERSION
 
-https://docs.nestjs.com/cli/overview
-- npm install -g @nestjs/cli
-
-- To create new Nest project.
-    - nest new main
-- cd main -> npm run start:dev
+### v24.5.0
 
 
 
