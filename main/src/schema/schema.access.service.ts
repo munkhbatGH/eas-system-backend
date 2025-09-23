@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import mongoose, { Connection } from 'mongoose';
 const { ObjectId } = require('mongodb')
+import moment from 'moment';
+const _ = require('lodash')
 var helper = require('../utils/helper')
 
 interface SchemaObjectConfig {
@@ -121,6 +123,190 @@ export class SchemaAccessService {
     const data = aggregateResponse && aggregateResponse.length > 0 ? aggregateResponse[0] : null
     const columns = this.getLookupColumns(collection, fields)
     return this.lookup(data, columns)
+  }
+
+  async listFilter(model, query, filter = {}, returnFilter = false, additionalAggregation = [], additionalAllFilter = [], modelSchema = null, inlineFilter = {}) {
+    const { schema }: SchemaObjectConfig = this.getSchema(model);
+    console.log(JSON.stringify(schema))
+    const columns = this.getColumns(schema)
+    let sort: any = { _id: -1 }
+    let skip = 0
+    let dates = []
+    let limit = 10
+    let aggregationFilter: any = {}
+
+    if (query.limit) {
+      limit = Number(query.limit)
+    }
+    if (query.skip) {
+      skip = Number(query.skip)
+    }
+    if (query.createdDate) {
+      dates = JSON.parse(query.createdDate)
+    }
+    if (query.sort) {
+      const sorts = JSON.parse(query.sort)
+      sort = sorts
+    } else {
+      if (columns.indexOf('name') > -1) {
+        sort = { 'name': 1 }
+      }
+    }
+    if (filter) {
+      Object.keys(filter).forEach((key) => {
+        const field = filter[key]
+        aggregationFilter[key] = field
+      })
+    }
+    if (dates && dates.length > 0) {
+      const start = moment(dates[0])
+      const end = moment(dates[1]).set({ hour: 23, minute: 59, second: 59})
+      aggregationFilter[query.dateField ? query.dateField : 'createdAt'] = { $gte: start.toDate(), $lte: end.toDate() }
+    }
+    if (query.filter && !_.isEmpty(query.filter) && query.filter !== '{}') {
+      const duplicateKeys: any[] = []
+      const andFinds: any[] = []
+      const queryFilter = JSON.parse(query.filter)
+      Object.keys(queryFilter).forEach(async (key) => {
+        if (key === 'all') {
+          const orFilter: any[] = additionalAllFilter
+          schema.filter((s) => ['String'].indexOf(s.type) > -1).forEach((field) => {
+            orFilter.push({[field.key]: { $regex: queryFilter[key], $options: 'i' }})
+          })
+          let allFilter: any[] = []
+          if (filter) {
+            allFilter = [_.cloneDeep(filter)]
+          }
+          if (orFilter.length > 0) {
+            allFilter.push({ $or: orFilter } )
+          }
+          if (allFilter.length > 0) {
+            aggregationFilter = { $and: allFilter }
+          }
+        } else {
+          const fieldConfig = schema.find((s) => s.key === key)
+          let fieldValue = queryFilter[key]
+          let filterConfig: any = null
+          if (fieldConfig) {
+            if (fieldConfig.type === 'Number') {
+              filterConfig = Number(fieldValue)
+            }
+            if (fieldConfig.type === 'String') {
+              if (typeof fieldValue === 'string') {
+                if (fieldConfig.enum) {
+                  filterConfig = fieldValue
+                } else {
+                  filterConfig = { $regex: fieldValue, $options: 'i' }
+                }
+              } else if (typeof fieldValue === 'object') {
+                filterConfig = fieldValue
+              }
+            } else if (fieldConfig.type === 'Date') {
+              if (fieldValue && Array.isArray(fieldValue)) {
+                filterConfig = { $gte: new Date(fieldValue[0]), $lt: new Date(fieldValue[1]) }
+              } else {
+                filterConfig = { $gte: moment(fieldValue).startOf('day').toDate(), $lte: moment(fieldValue).endOf('day').toDate() }
+              }
+            } else if (fieldConfig.type === 'ObjectID') {
+              if (Array.isArray(fieldValue)) {
+                const list: any[] = []
+                fieldValue.forEach((fieldId) => {
+                  const id = fieldId.hasOwnProperty('_id') ? fieldId._id : fieldId
+                  list.push(new ObjectId(id))
+                })
+                filterConfig = { $in: list }
+              } else {
+                if (fieldValue.hasOwnProperty('_id') || ObjectId.isValid(fieldValue)) {
+                  fieldValue = fieldValue.hasOwnProperty('_id') ? fieldValue._id : fieldValue
+                  if (fieldValue !== '') {
+                    filterConfig = { $eq: new ObjectId(fieldValue) }
+                  }
+                } else if (inlineFilter.hasOwnProperty(fieldConfig.key)) {
+                  filterConfig = inlineFilter[fieldConfig.key]
+                }
+              }
+            } else if (fieldConfig.type === 'Array') {
+              if (fieldValue && Array.isArray(fieldValue)) {
+                const list: any[] = []
+                fieldValue.forEach((fieldId) => {
+                  const id = fieldId.hasOwnProperty('_id') ? fieldId._id : fieldId
+                  list.push(new ObjectId(id))
+                })
+                filterConfig = { $in: list }
+              } else if (inlineFilter.hasOwnProperty(fieldConfig.key)) {
+                filterConfig = inlineFilter[fieldConfig.key]
+              }
+            } else if (fieldConfig.type === 'Boolean') {
+              if (fieldValue === 'all') {
+                filterConfig = { $in: [true, false]}
+              } if (fieldValue === 'true') {
+                filterConfig = { $eq: true }
+              } else if (fieldValue === 'false') {
+                filterConfig = { $eq: false }
+              }
+            }
+            if (filterConfig !== null) {
+              if (aggregationFilter.hasOwnProperty(key)) {
+                duplicateKeys.push(key)
+                andFinds.push({ [key]: filterConfig })
+              } else {
+                aggregationFilter[key] = filterConfig
+              }
+            }
+          }
+        }
+      })
+      if (duplicateKeys.length > 0) {
+        duplicateKeys.forEach((key) => {
+          andFinds.unshift({ [key]: aggregationFilter[key] })
+          delete aggregationFilter[key]
+        })
+        if (!aggregationFilter.$and) {
+          aggregationFilter.$and = []
+        }
+        aggregationFilter.$and = aggregationFilter.$and.concat(andFinds)
+      }
+    }
+    if (returnFilter) {
+      return aggregationFilter
+    }
+
+    const aggregation: any[] = []
+    aggregation.push({ $sort: sort })
+    aggregation.push({ $skip: skip })
+    aggregation.push({ $limit: limit })
+
+    this.listAggregation(schema, {}, aggregation, true)
+
+    const mainAggregation: any[] = [{ $match: aggregationFilter }]
+    if (additionalAggregation) {
+      additionalAggregation.forEach((a) => {
+        mainAggregation.push(a)
+      })
+    }
+    mainAggregation.push(
+      {
+        $facet: {
+          rows: aggregation,
+          totalCount: [{ $count: 'count'}]
+        }
+      }
+    )
+    // console.log(JSON.stringify(mainAggregation))
+    const aggregateResults = await mongoose.model(model).aggregate(mainAggregation)
+
+    const result = helper.data(aggregateResults)
+    const list: any[] = result.rows
+
+    const promises: any[] = []
+    list.forEach((a) => {
+      promises.push(this.lookup(a, this.getLookupColumns(model, [], true, modelSchema)))
+    })
+
+    return {
+      total: result.count,
+      list: await Promise.all(promises)
+    }
   }
 
   //#endregion
@@ -329,6 +515,108 @@ export class SchemaAccessService {
       }
     })
     return lookup
+  }
+
+  listAggregation(schema, project, aggregation, isColumn = false, isReport = false, reportColumns: any[] = []) {
+    schema.forEach((field) => {
+      if (isReport || (isColumn ? (field.column || field.filter) : field.allowed)) {
+        if (!field.collection) {
+          project[`${field.key}`] = 1
+        } else if (field.collection) {
+          const fieldKey = field.key
+          const collectionName = mongoose.model(field.collection).collection.collectionName
+          if ((!field.lookup && !field.raw)) {
+            const reportFound = reportColumns.find(r => r.path.indexOf(field.path.join('.')) > -1)
+            if (!reportFound || field.type !== 'Array') {
+              aggregation.push({ $lookup: { from: collectionName, localField: fieldKey, foreignField: '_id', as: fieldKey} })
+              const lookupFields = this.getShortFields(field.collection, isReport)
+              project[field.key] = lookupFields
+            }
+            if (field.type !== 'Array') {
+              if (!reportFound || (reportFound && !reportFound.array)) {
+                aggregation.push({ $unwind: { path: `$${fieldKey}`, preserveNullAndEmptyArrays: true} })
+              }
+              if (reportFound && reportFound.array && reportFound.filter) {
+                project[field.key] = 1
+                const fieldFilter = JSON.parse(JSON.stringify(reportFound.filter))
+                if (fieldFilter.key && fieldFilter.collection) {
+                  project[field.path[0] + '.' + fieldFilter.key] = 1
+                }
+              }
+            }
+          } else {
+            project[field.key] = 1
+          }
+          reportColumns.filter(s => s.custom === true).forEach(element => {
+            if (element.path.indexOf('.') > -1) {
+              const split = element.path.split('.')
+              if (!project[split[0]]) {
+                project[split[0]] = {}
+              }
+              if (split.length > 2) {
+                const s2 = split[2]
+                if (!project[split[0]][split[1]]) {
+                  project[split[0]][split[1]] = {}
+                }
+                project[split[0]][split[1]][s2] = 1
+              } else {
+                project[split[0]][split[1]] = 1
+              }
+            } else {
+              project[element.path] = 1
+            }
+          })
+        }
+      }
+    })
+    if (isReport) {
+      Object.keys(project).forEach(p => {
+        if (p.indexOf('.') > -1) {
+          const splitProps = p.split('.')
+          const childs = Object.keys(project).filter(p2 => p2.indexOf('.') > -1 && p2.split('.')[0] === splitProps[0])
+          childs.forEach(c => {
+            const temp = project[c]
+            delete project[c]
+            let splitNames = c.split('.')
+            splitNames.shift()
+            const joinedSplitNames = splitNames.join('.')
+            if (!project[splitProps[0]]) {
+              project[splitProps[0]] = {}
+            }
+            project[splitProps[0]][joinedSplitNames] = temp
+          })
+        }
+      })
+    }
+    aggregation.push({ $project: project })
+    return aggregation
+  }
+
+  getSchemaJoiErrors(modelName, errors) {
+    const msgs: any[] = []
+    const { schema }: SchemaObjectConfig = this.getSchema(modelName);
+    const fields = schema
+    errors.forEach((msg) => {
+      const match = msg.message.match(/"([^"]*)"/)
+      if (match) {
+        const paths: any[] = []
+        msg.path.forEach((item) => {
+          if (typeof item === 'string') {
+            paths.push(item)
+          }
+        })
+        const fullPath = paths.join('.')
+        const found = fields.find((a) => a.key === fullPath)
+        let errorMessage = msg.message
+        if (found && found.label) {
+          errorMessage = errorMessage.replace(match[1], found.label)
+        }
+        msgs.push(errorMessage)
+      } else {
+        msgs.push(msg.message)
+      }
+    })
+    return msgs
   }
 
   //#endregion

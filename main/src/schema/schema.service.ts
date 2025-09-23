@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { SchemaAccessService } from './schema.access.service';
-const schemaHelper = require('../utils/schema.helper')
 
 @Injectable()
 export class SchemaService {
@@ -13,12 +12,14 @@ export class SchemaService {
 
   async findAll(req): Promise<any[]> {
     try {
-      const collection = 'User';
-      // const schema = await this.schemaAccessService.getSchema(collection)
-      // console.log('----schema----', JSON.parse(JSON.stringify(schema)))
-      const dddd = await this.schemaAccessService.findAll(collection, ['name', 'Password'], {})
-      console.log('----dddd----', dddd)
-      return await this.connection.collection('users').find().toArray();
+      console.log('--schema--list-----', req.params)
+      const checkModels = ['User']
+      if (!req.params.name || (checkModels.indexOf(req.params.name) === -1)) {
+        throw new BadRequestException('Bad request!')
+      }
+      const collection = req.params.name
+      const dddd = await this.schemaAccessService.findAll(collection, ['name', 'password'], {})
+      return dddd
     } catch (error) {
       console.error('Error in findAll:', error);
       throw error;

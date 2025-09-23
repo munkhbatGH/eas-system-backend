@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, BadRequestException } from '@nestjs/common';
 import { SchemaService } from './schema.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { InjectConnection } from '@nestjs/mongoose';
@@ -12,9 +12,8 @@ export class SchemaController {
 ) {}
 
   @UseGuards(AuthGuard)
-  @Get('list')
+  @Get('/list/:name')
   async getList(@Request() req): Promise<any[]> {
-    console.log('--schema--list-----')
     // return await this.connection.collection('users').find().toArray();
     return await this.schemaService.findAll(req)
   }
