@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtConstants } from './constants';
 import { IS_PUBLIC_KEY } from './decorator/public.decorator';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,7 +27,20 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    let request: any;
+    if (context.getType() === 'http') {
+      request = context.switchToHttp().getRequest();
+    } else if (context.getType<string>() === 'graphql') {
+      const gqlContext = GqlExecutionContext.create(context);
+      request = gqlContext.getContext().req;
+      return true
+    }
+
+    if (!request) {
+      throw new UnauthorizedException('Request not found');
+    }
+
+    console.log('-------context.getType()-------', context.getType())
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
