@@ -41,3 +41,11 @@ Ngrok
 - ngrok config add-authtoken 32lxSZpULp7k1k2tlr2L6ARj1yS_3nvSdsdfv1Wo9mzCmTTgw
 - ngrok http 4000
     - Forwarding  https://random-subdomain.ngrok.io -> http://localhost:4000
+
+
+## DOCKER
+
+- docker-compose up    —-> start containers and attach logs
+- docker-compose up -d —-> start containers in background
+- docker-compose down
+- docker-compose logs
