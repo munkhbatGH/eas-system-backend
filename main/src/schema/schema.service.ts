@@ -1,12 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
 import { SchemaAccessService } from './schema.access.service';
 
 @Injectable()
 export class SchemaService {
   constructor(
-    @InjectConnection() private connection: Connection,
     private readonly schemaAccessService: SchemaAccessService
   ) {}
 
