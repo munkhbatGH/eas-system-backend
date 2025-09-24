@@ -6,7 +6,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User extends Model{
-  @Prop()
+  @Prop({ column: true })
   name: string;
 
   @Prop()

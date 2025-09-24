@@ -13,4 +13,10 @@ export class SchemaController {
   async getList(@Request() req): Promise<any[]> {
     return await this.schemaService.findAll(req)
   }
+
+  @UseGuards(AuthGuard)
+  @Get('/config/:name')
+  async getConfig(@Request() req): Promise<any[]> {
+    return await this.schemaService.getSchemaFields(req)
+  }
 }

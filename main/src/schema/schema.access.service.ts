@@ -6,7 +6,7 @@ import moment from 'moment';
 const _ = require('lodash')
 var helper = require('../utils/helper')
 
-interface SchemaObjectConfig {
+export interface SchemaObjectConfig {
   schema: any[];
   collectionName: string;
 }
