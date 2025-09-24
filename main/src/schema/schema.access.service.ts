@@ -81,6 +81,22 @@ export class SchemaAccessService {
     return columnNames
   }
 
+  getColumnsProps(schema) {
+    const columns: any[] = []
+    schema.forEach((field) => {
+      if (field.column || field.filter || field.allowed) {
+        columns.push({
+          name: field.label.toUpperCase(),
+          uid: field.key,
+          sortable: field.sortable,
+          filterable: field.filterable,
+          filterType: field.filterType,
+        })
+      }
+    })
+    return columns
+  }
+
   getAllSchemas() {
     const schemas = {};
     Object.keys(this.connection.models).forEach(modelName => {
@@ -323,7 +339,10 @@ export class SchemaAccessService {
         type: fieldObj.instance,
         allowed: (options.filter || options.column || options.short),
         collection: options.ref,
-        label: options.label
+        label: options.label,
+        sortable: options.sortable,
+        filterable: options.filterable,
+        filterType: options.filterType
       }
       if (Array.isArray(fieldObj.options)) {
         const obj = fieldObj.options[0]

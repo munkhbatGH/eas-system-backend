@@ -8,7 +8,7 @@ export class SchemaService {
   ) {}
 
   checkSchema(modelName: string) {
-    const checkModels = ['User']
+    const checkModels = ['User', 'SetModule']
     if (!modelName || (checkModels.indexOf(modelName) === -1)) {
       throw new BadRequestException('Bad request!')
     }
@@ -16,7 +16,6 @@ export class SchemaService {
 
   async findAll(req): Promise<any[]> {
     try {
-      console.log('--schema--list-----', req.params)
       await this.checkSchema(req.params.name)
       const collection = req.params.name
       const dddd = await this.schemaAccessService.findAll(collection, ['name', 'password'], {})
@@ -29,13 +28,11 @@ export class SchemaService {
 
   async getSchemaFields(req): Promise<any[]> {
     try {
-      console.log('--getSchemaFields-------', req.params)
       await this.checkSchema(req.params.name)
 
       const collection = req.params.name
       const { schema }: SchemaObjectConfig = this.schemaAccessService.getSchema(collection);
-      const columns = await this.schemaAccessService.getColumns(schema)
-      console.log('--getSchemaFields---columns----', columns)
+      const columns = await this.schemaAccessService.getColumnsProps(schema)
       return columns
     } catch (error) {
       console.error('Error in getSchemaFields:', error);
