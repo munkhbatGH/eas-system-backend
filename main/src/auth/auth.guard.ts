@@ -50,8 +50,9 @@ export class AuthGuard implements CanActivate {
         secret: jwtConstants.secret,
       });
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (e) {
+      console.log('-------e----2---', e)
+      throw new UnauthorizedException(e);
     }
     return true;
   }
