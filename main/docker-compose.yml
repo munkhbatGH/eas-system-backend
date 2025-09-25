@@ -14,3 +14,16 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  redis_data: {}  # ✅ This is required to define the volume
