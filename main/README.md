@@ -42,7 +42,7 @@ Ngrok
 
 ### docker дээр kafka ажиллаж байгаа.
 
-- docker-compose up    —-> start containers and attach logs
-- docker-compose up -d —-> start containers in background
+- docker-compose -p easystem up    —-> start containers and attach logs
+- docker-compose -p easystem up -d —-> start containers in background
 - docker-compose down
 - docker-compose logs
