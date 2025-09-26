@@ -15,11 +15,12 @@ export class UsersService {
   ) {}
 
   async findOne(username: string): Promise<any> {
-    return await this.connection.collection('users').findOne({ name: username.toString() });
+    return await this.dynamicModelService.findOne(modelName, { name: username.toString() })
   }
 
   async findAll(): Promise<any[]> {
-    return await this.connection.collection('users').find().toArray();
+    // return await this.connection.collection('users').find().toArray();
+    return await this.dynamicModelService.findAll(modelName, {})
   }
 
   async save(user): Promise<User | undefined> {

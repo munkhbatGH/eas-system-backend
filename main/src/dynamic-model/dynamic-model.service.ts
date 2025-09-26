@@ -18,6 +18,11 @@ export class DynamicModelService {
     return await model.findOne(filter)
   }
 
+  async findAll<T>(modelName: string, filter: any): Promise<any> {
+    const model = await this.getModel(modelName)
+    return await model.find(filter)
+  }
+
   async save<T>(modelName: string, data: any): Promise<T | undefined> {
     try {
       const model = this.connection.model<T>(modelName);
