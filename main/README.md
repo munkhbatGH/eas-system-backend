@@ -35,6 +35,9 @@ Ngrok
 - npm install -g ngrok
 - ngrok config add-authtoken 32lxSZpULp7k1k2tlr2L6ARj1yS_3nvSdsdfv1Wo9mzCmTTgw
 - ngrok http 4000
+  ngrok http 4000 --log=ngrok.log --log-format=json
+  ngrok http 4000 --log=stdout --log-format=logfmt
+  ngrok http 4000 --log=stdout --log-format=json
     - Forwarding  https://random-subdomain.ngrok.io -> http://localhost:4000
 
 

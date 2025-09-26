@@ -1,3 +1,4 @@
+import { SetModule, SetModuleSchema } from "./schemas/setModule.schema";
 import { User, UserSchema } from "./schemas/user.schema";
 
 interface TypeSchemas {
@@ -6,5 +7,6 @@ interface TypeSchemas {
 }
 
 export const Schemas:TypeSchemas[] = [
-    { name: User, schema: UserSchema },
+    { name: User.name, schema: UserSchema },
+    { name: SetModule.name, schema: SetModuleSchema },
 ]

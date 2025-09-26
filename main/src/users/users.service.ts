@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
-import { User } from 'src/schemas/user.schema';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+import { User, UserDocument } from 'src/schemas/user.schema';
 import { hashString } from 'src/utils/bcrypt';
 
 export type UserTemp = any;
@@ -10,6 +10,7 @@ export type UserTemp = any;
 export class UsersService {
   constructor(
     @InjectConnection() private connection: Connection,
+    @InjectModel(User.name) private userModel: Model<UserDocument>, 
   ) {}
 
   private readonly users = [
@@ -32,16 +33,21 @@ export class UsersService {
     return await this.connection.collection('users').find().toArray();
   }
 
-  async save(user): Promise<User> {
-    const found = await this.connection.collection('users').findOne({ name: user.name });
-    if (found) {
-      throw new BadRequestException('Өмнө бүртгэгдсэн хэрэглэгч байна.');
+  async save(user): Promise<User | undefined> {
+    try {
+      const found = await this.connection.collection('users').findOne({ name: user.name });
+      if (found) {
+        throw new BadRequestException('Өмнө бүртгэгдсэн хэрэглэгч байна.');
+      }
+      user.password = await hashString(user.password);
+      console.log('---user---', user);
+      const user_new = new this.userModel(user);
+      await user_new.save()
+      return user_new;
+    } catch (error) {
+      console.log('---error---', error);
+      return undefined;
     }
-    user.password = await hashString(user.password);
-    console.log('---user---', user)
-    const user_new = new User(user);
-    await user_new.save()
-    return user_new;
   }
 
 }

@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Document } from 'mongoose';
 
-export type SetModuleDocument = SetModule & Document; 
+export type SetModuleDocument = SetModule & Document;
 
 @Schema()
-export class SetModule extends Model{
+export class SetModule {
   @Prop({ column: true, label: 'Код', sortable: false, filterable: true, filterType: 'text'  })
   code: string;
 

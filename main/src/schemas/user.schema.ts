@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Model } from 'mongoose';
+import { Document } from 'mongoose';
 
-// export type UserDocument = HydratedDocument<User>;
-export type UserDocument = User & Document; 
+export type UserDocument = User & Document;
 
 @Schema()
-export class User extends Model{
+export class User {
   @Prop({ column: true })
   name: string;
 
