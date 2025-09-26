@@ -11,12 +11,12 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class AuthService {
-    constructor(
-      private usersService: UsersService,
-      private jwtService: JwtService,
-      @InjectModel(Device.name)
-      private readonly deviceModel: Model<DeviceDocument>, // ✅ Inject here
-    ) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+    @InjectModel(Device.name)
+    private readonly deviceModel: Model<DeviceDocument>, // ✅ Inject here
+  ) {}
 
   async login(req, res, username: string, pass: string): Promise<any> {
     try {
