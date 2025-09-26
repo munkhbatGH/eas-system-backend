@@ -1,8 +1,9 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards, Get, Request} from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards, Get, Request, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { User } from './decorator/user.decorator';
 import { Public } from './decorator/public.decorator';
+import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -11,9 +12,9 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(@Body() loginDto: Record<string, any>) {
+  login(@Request() req, @Body() loginDto: Record<string, any>, @Res({ passthrough: true }) res: Response) {
     console.log('--------login--');
-    return this.authService.login(loginDto.username, loginDto.password);
+    return this.authService.login(req, res, loginDto.username, loginDto.password);
   }
 
   @UseGuards(AuthGuard)
