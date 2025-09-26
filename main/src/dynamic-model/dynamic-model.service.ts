@@ -16,9 +16,9 @@ export class DynamicModelService {
   async save<T>(modelName: string, data: any): Promise<T | undefined> {
     try {
       const model = this.connection.model<T>(modelName);
-      const created = new model(data);
-      await created.save();
-      return created;
+      const doc = new model(data);
+      await doc.save();
+      return doc;
     } catch (error) {
       console.error('-DynamicModelService--error---', error);
       return undefined;
