@@ -8,9 +8,14 @@ export class DynamicModelService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  get<T>(modelName: string) {
+  getModel<T>(modelName: string) {
     const model = this.connection.model<T>(modelName);
     return model;
+  }
+
+  async findOne<T>(modelName: string, filter: any): Promise<any> {
+    const model = await this.getModel(modelName)
+    return await model.findOne(filter)
   }
 
   async save<T>(modelName: string, data: any): Promise<T | undefined> {

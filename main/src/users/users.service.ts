@@ -5,6 +5,8 @@ import { DynamicModelService } from 'src/dynamic-model/dynamic-model.service';
 import { User } from 'src/schemas/user.schema';
 import { hashString } from 'src/utils/bcrypt';
 
+const modelName = 'User'
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -22,14 +24,12 @@ export class UsersService {
 
   async save(user): Promise<User | undefined> {
     try {
-      const found = await this.connection.collection('users').findOne({ name: user.name });
+      const found = await this.dynamicModelService.findOne(modelName, { name: user.name })
       if (found) {
         throw new BadRequestException('Өмнө бүртгэгдсэн хэрэглэгч байна.');
       }
       user.password = await hashString(user.password);
-      console.log('---user---', user);
-
-      return await this.dynamicModelService.save('User', user)
+      return await this.dynamicModelService.save(modelName, user)
     } catch (error) {
       console.log('---error---', error);
       return undefined;
