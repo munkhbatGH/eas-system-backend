@@ -62,8 +62,8 @@ export class AuthService {
       // set cookie (httpOnly, secure, sameSite)
       res.cookie('deviceToken', deviceToken, {
         httpOnly: true, secure: true,
-        sameSite: 'lax', // none, lax
-        // maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        sameSite: 'none', // none, lax
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
       });
     }
   
