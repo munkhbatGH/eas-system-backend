@@ -10,6 +10,13 @@
 Ашигласан линк:
 https://docs.nestjs.com/security/authentication
 
+### Add User
+
+http://localhost:4000/users/register
+- curl -X POST http://localhost:4000/users/register -d '{"name": "user1", "password": "123"}' -H "Content-Type: application/json"
+
+### Login
+
 - curl http://localhost:4000/auth/profile
 - curl -X POST http://localhost:4000/auth/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
 - curl http://localhost:4000/auth/profile -H "Authorization: Bearer ..."
@@ -22,11 +29,6 @@ https://docs.nestjs.com/security/authentication
 https://docs.nestjs.com/techniques/mongodb
 
 - Mongoose
-
-## Add User
-
-http://localhost:4000/users/register
-- curl -X POST http://localhost:4000/users/register -d '{"name": "user1", "password": "123"}' -H "Content-Type: application/json"
 
 
 ## Local backend to INTERNET
