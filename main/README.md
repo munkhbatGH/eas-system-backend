@@ -4,6 +4,21 @@
 ### v24.5.0
 
 
+## DOCKER
+
+### docker дээр kafka ажиллаж байгаа.
+
+- docker-compose -p easystem up    —-> start containers and attach logs
+- docker-compose -p easystem up -d —-> start containers in background
+- docker-compose down
+- docker-compose logs
+
+
+## DEV
+- npm install
+- npm run start:dev
+- npm run build
+
 
 ## Authentication
 
@@ -42,12 +57,3 @@ Ngrok
   ngrok http 4000 --log=stdout --log-format=json
     - Forwarding  https://random-subdomain.ngrok.io -> http://localhost:4000
 
-
-## DOCKER
-
-### docker дээр kafka ажиллаж байгаа.
-
-- docker-compose -p easystem up    —-> start containers and attach logs
-- docker-compose -p easystem up -d —-> start containers in background
-- docker-compose down
-- docker-compose logs
