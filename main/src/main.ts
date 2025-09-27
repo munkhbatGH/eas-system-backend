@@ -15,12 +15,32 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://munkhbatgh.github.io',
-    ],
-    credentials: true, // if you're sending cookies or auth headers
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'https://munkhbatgh.github.io',
+      ];
+    
+      console.log('CORS request from origin:', origin);
+    
+      if (!origin || allowedOrigins.includes(origin)) {
+        console.log('✅ Allowed by CORS:', origin);
+        callback(null, true);
+      } else {
+        console.warn('⛔ Blocked by CORS:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
   });
+  // app.enableCors({
+  //   origin: [
+  //     'http://localhost:3000',
+  //     'https://munkhbatgh.github.io',
+  //   ],
+  //   credentials: true, // if you're sending cookies or auth headers
+  // });
+
 
   const config = new DocumentBuilder()
     .addSecurity('basic', {
