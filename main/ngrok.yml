@@ -1,0 +1,9 @@
+version: "2"
+authtoken: 32lxSZpULp7k1k2tlr2L6ARj1yS_3nvSdsdfv1Wo9mzCmTTgw
+tunnels:
+  api:
+    proto: http
+    addr: 4000
+    # bind_tls: true
+    # inspect: true
+    # domain: 3db66fcf777422222.ngrok-free.app

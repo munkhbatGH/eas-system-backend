@@ -21,8 +21,6 @@ async function bootstrap() {
         'https://munkhbatgh.github.io',
       ];
     
-      console.log('CORS request from origin:', origin);
-    
       if (!origin || allowedOrigins.includes(origin)) {
         console.log('✅ Allowed by CORS:', origin);
         callback(null, true);
@@ -32,6 +30,16 @@ async function bootstrap() {
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'ngrok-skip-browser-warning', // ✅ Add this!
+    ],
+    exposedHeaders: ['Set-Cookie'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
   // app.enableCors({
   //   origin: [
@@ -40,6 +48,14 @@ async function bootstrap() {
   //   ],
   //   credentials: true, // if you're sending cookies or auth headers
   // });
+
+
+  // Add request logging
+  app.use((req, res, next) => {
+    console.log('📥 Request:', req.method, req.url);
+    console.log('📋 Headers:', req.headers);
+    next();
+  });
 
 
   const config = new DocumentBuilder()
