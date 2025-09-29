@@ -30,8 +30,18 @@ export class DynamicModelService {
       await doc.save();
       return doc;
     } catch (error) {
-      console.error('-DynamicModelService--error---', error);
       return undefined;
+    }
+  }
+
+  async updateOne<T>(modelName: string, data: any): Promise<any> {
+    try {
+      const model = this.connection.model<T>(modelName);
+      const result = await model.updateOne({ _id: data._id }, data);
+      return { success: result.modifiedCount > 0, data };
+    } catch (error) {
+      console.error('-error -> DynamicModelService-update---', error);
+      return error;
     }
   }
 

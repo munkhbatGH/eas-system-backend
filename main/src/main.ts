@@ -41,19 +41,12 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
-  // app.enableCors({
-  //   origin: [
-  //     'http://localhost:3000',
-  //     'https://munkhbatgh.github.io',
-  //   ],
-  //   credentials: true, // if you're sending cookies or auth headers
-  // });
 
 
   // Add request logging
   app.use((req, res, next) => {
-    console.log('📥 Request:', req.method, req.url);
-    console.log('📋 Headers:', req.headers);
+    // console.log('📥 Request:', req.method, req.url);
+    // console.log('📋 Headers:', req.headers);
     next();
   });
 
