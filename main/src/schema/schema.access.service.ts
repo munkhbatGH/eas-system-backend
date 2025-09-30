@@ -113,12 +113,24 @@ export class SchemaAccessService {
 
   //#region METHODS
 
-  async findAll(modelName, fields, filter, sort = null) {
+  async findAll(modelName, fields, filter, query) {
     const { collectionName }: SchemaObjectConfig = this.getSchema(modelName);
     const aggregation = this.findAggregation(modelName, fields, [{ $match: filter }], {})
-    if (sort) {
-      aggregation.push({ $sort: sort })
+
+    let skip = 0
+    let limit = 5
+
+    if (query?.limit) {
+      limit = Number(query.limit)
     }
+    if (query.skip) {
+      skip = Number(query.skip)
+    }
+    if (query.sort) {
+      aggregation.push({ $sort: query.sort })
+    }
+    aggregation.push({ $skip: skip })
+    aggregation.push({ $limit: limit })
     const list = await this.connection.collection(collectionName).aggregate(aggregation).toArray()
     const promises: any[] = []
     list.forEach((a) => {
@@ -470,7 +482,7 @@ export class SchemaAccessService {
             }
           })
           if (ids.length > 0) {
-            promises.push(this.findAll(object.collection, object.lookupProject ? object.lookupProject : [], { _id: { $in: ids } }))
+            promises.push(this.findAll(object.collection, object.lookupProject ? object.lookupProject : [], { _id: { $in: ids } }, {}))
           }
         } else {
           if (Object.keys(data[object.path[0]]).length > 0) {
