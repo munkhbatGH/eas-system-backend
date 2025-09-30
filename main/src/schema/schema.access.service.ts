@@ -123,20 +123,38 @@ export class SchemaAccessService {
     if (query?.limit) {
       limit = Number(query.limit)
     }
-    if (query.skip) {
-      skip = Number(query.skip)
+    if (query.page) {
+      skip = ((Number(query.page) || 1) - 1) * limit
     }
     if (query.sort) {
       aggregation.push({ $sort: query.sort })
     }
     aggregation.push({ $skip: skip })
     aggregation.push({ $limit: limit })
-    const list = await this.connection.collection(collectionName).aggregate(aggregation).toArray()
+
+    const mainAggregation: any[] = []
+    mainAggregation.push(
+      {
+        $facet: {
+          rows: aggregation,
+          totalCount: [{ $count: 'count'}]
+        }
+      }
+    )
+    const aggregateResults = await this.connection.collection(collectionName).aggregate(mainAggregation).toArray()
+
+    const result = helper.data(aggregateResults)
+    const list: any[] = result.rows
+
     const promises: any[] = []
     list.forEach((a) => {
-      promises.push(this.lookup(a, this.getLookupColumns(modelName, fields, true)))
+      promises.push(this.lookup(a, this.getLookupColumns(modelName, [], true)))
     })
-    return await Promise.all(promises)
+
+    return {
+      total: result.count,
+      list: await Promise.all(promises)
+    }
   }
 
   async findOne(collection, fields, filter, exclude = []) {

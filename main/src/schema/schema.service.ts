@@ -31,7 +31,7 @@ export class SchemaService {
     }
   }
 
-  async findAll(req): Promise<any[]> {
+  async findAll(req): Promise<any> {
     try {
       await this.checkSchema(req.params.name)
       const query = req.query || {}
