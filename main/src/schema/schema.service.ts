@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchemaAccessService, SchemaObjectConfig } from './schema.access.service';
 import { SetModule } from 'src/schemas/setModule.schema';
 import { DynamicModelService } from 'src/dynamic-model/dynamic-model.service';
-const { ObjectId } = require('mongodb')
 
 @Injectable()
 export class SchemaService {
