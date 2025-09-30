@@ -25,4 +25,10 @@ export class SchemaController {
   async post(@Request() req): Promise<any | undefined> {
     return await this.schemaService.save(req.params.name, req.body)
   }
+
+  @UseGuards(AuthGuard)
+  @Post('/put/:name')
+  async put(@Request() req): Promise<any | undefined> {
+    return await this.schemaService.put(req.params.name, req.body)
+  }
 }

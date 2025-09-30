@@ -45,27 +45,31 @@ export class SchemaService {
   }
 
   async save(modelName, data): Promise<SetModule | undefined> {
-      try {
-        await this.checkSchema(modelName)
-        console.log('---save---', data)
-        const filter = { name: data.name }
-        if (data._id) {
-          filter['_id'] = { $ne: new ObjectId(data._id) }
-          delete data._id
-        }
-        const found = await this.dynamicModelService.findOne(modelName, filter)
-        if (found) {
-          throw new BadRequestException('Өмнө бүртгэгдсэн байна.');
-        }
-        console.log('---found---', found)
-        if (data._id) {
-          return await this.dynamicModelService.updateOne(modelName, data)
-        } else {
-          return await this.dynamicModelService.save(modelName, data)
-        }
-      } catch (error) {
-        console.error('Error in schema -> save:', error);
-        return error;
+    try {
+      await this.checkSchema(modelName)
+      const found = await this.dynamicModelService.findOne(modelName, { name: data.name })
+      if (found) {
+        throw new BadRequestException('Өмнө бүртгэгдсэн байна.');
       }
+      return await this.dynamicModelService.save(modelName, data)
+    } catch (error) {
+      console.error('Error in schema -> save:', error);
+      return error;
     }
+  }
+
+  async put(modelName, data): Promise<any> {
+    try {
+      await this.checkSchema(modelName)
+      const found = await this.dynamicModelService.findOne(modelName, { _id: data._id })
+      if (!found) {
+        throw new BadRequestException('Бүртгэл олдсонгүй.');
+      }
+      const ddd = await this.dynamicModelService.updateOne(modelName, data)
+      return { success: true }
+    } catch (error) {
+      console.error('Error in schema -> save:', error);
+      return error;
+    }
+  }
 }
