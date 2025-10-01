@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Post } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, Post, Delete } from '@nestjs/common';
 import { SchemaService } from './schema.service';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -30,5 +30,11 @@ export class SchemaController {
   @Post('/put/:name')
   async put(@Request() req): Promise<any | undefined> {
     return await this.schemaService.put(req.params.name, req.body)
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('/delete/:name')
+  async delete(@Request() req): Promise<any | undefined> {
+    return await this.schemaService.delete(req.params.name, req.body)
   }
 }

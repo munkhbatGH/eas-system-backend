@@ -46,4 +46,15 @@ export class DynamicModelService {
     }
   }
 
+  async deleteOne<T>(modelName: string, data: any): Promise<any> {
+    try {
+      const model = this.connection.model<T>(modelName);
+      const result = await model.updateOne({ _id: new ObjectId(data._id) }, { $set: { active: false, deleted: true, deletedDate: new Date() } });
+      return { success: result.modifiedCount > 0 };
+    } catch (error) {
+      console.error('-error -> DynamicModelService-updateOne---', error);
+      return error;
+    }
+  }
+
 }

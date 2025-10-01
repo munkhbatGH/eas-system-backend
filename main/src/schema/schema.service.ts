@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchemaAccessService, SchemaObjectConfig } from './schema.access.service';
 import { SetModule } from 'src/schemas/setModule.schema';
 import { DynamicModelService } from 'src/dynamic-model/dynamic-model.service';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class SchemaService {
@@ -36,7 +37,7 @@ export class SchemaService {
       await this.checkSchema(req.params.name)
       const query = req.query || {}
       const collection = req.params.name
-      const dddd = await this.schemaAccessService.findAll(collection, ['code', 'name', 'description'], {}, query)
+      const dddd = await this.schemaAccessService.findAll(collection, ['code', 'name', 'description'], { active: true }, query)
       return dddd
     } catch (error) {
       console.error('Error in schema -> findAll:', error);
@@ -69,6 +70,22 @@ export class SchemaService {
       return { success: true }
     } catch (error) {
       console.error('Error in schema -> save:', error);
+      return error;
+    }
+  }
+
+  async delete(modelName, data): Promise<any> {
+    try {
+      await this.checkSchema(modelName)
+      const found = await this.dynamicModelService.findOne(modelName, { _id: new ObjectId(data.id) })
+      if (!found) {
+        throw new BadRequestException('Бүртгэл олдсонгүй.');
+      }
+      const ddd = await this.dynamicModelService.deleteOne(modelName, found)
+      console.log('ddd:', ddd);
+      return ddd
+    } catch (error) {
+      console.error('Error in schema -> delete:', error);
       return error;
     }
   }
