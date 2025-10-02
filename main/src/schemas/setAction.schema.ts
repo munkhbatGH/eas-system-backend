@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { BaseSchema } from './_base.schema';
 
-export type SetModuleDocument = SetModule & Document;
+export type SetActionDocument = SetAction & Document;
 
 @Schema()
-export class SetModule extends BaseSchema {
+export class SetAction extends BaseSchema {
   @Prop({ column: true, label: 'Код', sortable: false, filterable: true, filterType: 'text' })
   code: string;
 
@@ -15,10 +15,10 @@ export class SetModule extends BaseSchema {
   @Prop({ column: true, label: 'Тайлбар', sortable: false, filterable: true, filterType: 'text' })
   desc: string;
 
-  constructor(item: Partial<SetModule>) {
+  constructor(item: Partial<SetAction>) {
     super()
     Object.assign(this, item)
   }
 }
 
-export const SetModuleSchema = SchemaFactory.createForClass(SetModule);
+export const SetActionSchema = SchemaFactory.createForClass(SetAction);

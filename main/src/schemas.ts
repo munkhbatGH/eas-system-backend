@@ -1,4 +1,5 @@
 import { Device, DeviceSchema } from "./schemas/device.schema";
+import { SetAction, SetActionSchema } from "./schemas/setAction.schema";
 import { SetMenu, SetMenuSchema } from "./schemas/setMenu.schema";
 import { SetModule, SetModuleSchema } from "./schemas/setModule.schema";
 import { SetRole, SetRoleSchema } from "./schemas/setRole.schema";
@@ -15,4 +16,5 @@ export const Schemas:TypeSchemas[] = [
     { name: Device.name, schema: DeviceSchema },
     { name: SetMenu.name, schema: SetMenuSchema },
     { name: SetRole.name, schema: SetRoleSchema },
+    { name: SetAction.name, schema: SetActionSchema },
 ]
