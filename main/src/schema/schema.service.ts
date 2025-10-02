@@ -13,6 +13,9 @@ const ModelObjects = {
   },
   'SetMenu': {
     fields: ['parent', 'code', 'name', 'description', 'createdDate', 'createdUserId']
+  },
+  'SetRole': {
+    fields: ['code', 'name', 'description', 'menuList']
   }
 }
 

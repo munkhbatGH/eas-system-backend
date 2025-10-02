@@ -1,6 +1,7 @@
 import { Device, DeviceSchema } from "./schemas/device.schema";
 import { SetMenu, SetMenuSchema } from "./schemas/setMenu.schema";
 import { SetModule, SetModuleSchema } from "./schemas/setModule.schema";
+import { SetRole, SetRoleSchema } from "./schemas/setRole.schema";
 import { User, UserSchema } from "./schemas/user.schema";
 
 interface TypeSchemas {
@@ -13,4 +14,5 @@ export const Schemas:TypeSchemas[] = [
     { name: SetModule.name, schema: SetModuleSchema },
     { name: Device.name, schema: DeviceSchema },
     { name: SetMenu.name, schema: SetMenuSchema },
+    { name: SetRole.name, schema: SetRoleSchema },
 ]
