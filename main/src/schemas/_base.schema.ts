@@ -7,7 +7,7 @@ export class BaseSchema {
   @Prop({ default: new Date() })
   createdDate: Date;
 
-  @Prop({ label: 'Бүртгэсэн', type: 'ObjectID', ref: 'User', short: true, column: true, lookup: true, lookupProject: ['name'] })
+  @Prop({ label: 'Бүртгэсэн', type: 'ObjectID', ref: 'User', short: true, column: true, lookup: true, lookupProject: ['name'], sortable: false, filterable: false, filterType: 'object' })
   createdUserId: ObjectId;
 
   @Prop({})
