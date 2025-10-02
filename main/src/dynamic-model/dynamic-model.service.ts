@@ -24,8 +24,9 @@ export class DynamicModelService {
     return await model.find(filter)
   }
 
-  async save<T>(modelName: string, data: any): Promise<T | undefined> {
+  async save<T>(modelName: string, data: any, user): Promise<T | undefined> {
     try {
+      data.createdUserId = user && user._id ? user._id : null;
       const model = this.connection.model<T>(modelName);
       const doc = new model(data);
       await doc.save();
@@ -35,10 +36,12 @@ export class DynamicModelService {
     }
   }
 
-  async updateOne<T>(modelName: string, data: any): Promise<any> {
+  async updateOne<T>(modelName: string, data: any, user): Promise<any> {
     try {
       const model = this.connection.model<T>(modelName);
-      const result = await model.updateOne({ _id: new ObjectId(data._id) }, { $set: data });
+
+      const updatedFields = { updatedUserId: user._id, updatedDate: new Date() }
+      const result = await model.updateOne({ _id: new ObjectId(data._id) }, { $set: Object.assign(updatedFields, data) });
       return { success: result.modifiedCount > 0, data };
     } catch (error) {
       console.error('-error -> DynamicModelService-updateOne---', error);

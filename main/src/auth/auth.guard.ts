@@ -10,12 +10,14 @@ import { Request } from 'express';
 import { jwtConstants } from './constants';
 import { IS_PUBLIC_KEY } from './decorator/public.decorator';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
+    private userService: UsersService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -40,7 +42,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Request not found');
     }
 
-    console.log('-------context.getType()-------', context.getType())
+    // console.log('-------context.getType()-------', context.getType())
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
@@ -49,7 +51,9 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      request['user'] = payload;
+
+      const user = await this.userService.findOneId(payload.sub);
+      request['user'] = user;
     } catch (e) {
       console.log('-------e----2---', e)
       throw new UnauthorizedException(e);

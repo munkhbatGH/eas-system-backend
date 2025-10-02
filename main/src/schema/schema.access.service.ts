@@ -455,9 +455,13 @@ export class SchemaAccessService {
       if (isAllowed || field.allowed) {
         if (field.collection) {
           const fieldKey = field.key
-          const collectionName = mongoose.model(field.collection).collection.collectionName
-          if (!field.lookup && !field.raw) {
-            aggregation.push({ $lookup: { from: collectionName, localField: fieldKey, foreignField: '_id', as: fieldKey} })
+          
+          const lookupModel: any = this.connection.models[field.collection] ? this.connection.models[field.collection] : null;
+          const lookupCollectionName = lookupModel.collection.collectionName;
+
+          // if ((!field.lookup && !field.raw)) {
+          if (field.lookup && !field.raw) {
+            aggregation.push({ $lookup: { from: lookupCollectionName, localField: fieldKey, foreignField: '_id', as: fieldKey} })
             if (field.type !== 'Array') {
               aggregation.push({ $unwind: { path: `$${fieldKey}`, preserveNullAndEmptyArrays: true} })
             }
@@ -504,7 +508,9 @@ export class SchemaAccessService {
           }
         } else {
           if (Object.keys(data[object.path[0]]).length > 0) {
-            promises.push(this.findOne(object.collection, object.lookupProject ? object.lookupProject : [], { _id: { $eq: new ObjectId(data[object.path[0]]) } }))
+            // promises.push(this.findOne(object.collection, object.lookupProject ? object.lookupProject : [], { _id: { $eq: new ObjectId(data[object.path[0]]) } }))
+            // promises.push(this.findOne(object.collection, object.lookupProject ? object.lookupProject : [], { _id: { $eq: data[object.path[0]]._id } }))
+            promises.push(this.findOne(object.collection, object.lookupProject ? object.lookupProject : [], data[object.path[0]] ))
           }
         }
       }

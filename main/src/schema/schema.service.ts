@@ -4,6 +4,18 @@ import { SetModule } from 'src/schemas/setModule.schema';
 import { DynamicModelService } from 'src/dynamic-model/dynamic-model.service';
 import { ObjectId } from 'mongodb';
 
+const ModelObjects = {
+  'User': {
+    fields: ['name']
+  },
+  'SetModule': {
+    fields: ['code', 'name', 'description']
+  },
+  'SetMenu': {
+    fields: ['parent', 'code', 'name', 'description', 'createdDate', 'createdUserId']
+  }
+}
+
 @Injectable()
 export class SchemaService {
   constructor(
@@ -12,10 +24,13 @@ export class SchemaService {
   ) {}
 
   checkSchema(modelName: string) {
-    const checkModels = ['User', 'SetModule']
-    if (!modelName || (checkModels.indexOf(modelName) === -1)) {
+    if (!modelName || (modelName && !ModelObjects[modelName])) {
       throw new BadRequestException('Bad request!')
     }
+    if (modelName && ModelObjects[modelName] && !ModelObjects[modelName].fields) {
+      throw new BadRequestException('Bad request!')
+    }
+    return ModelObjects[modelName]
   }
 
   async getSchemaFields(req): Promise<any[]> {
@@ -34,10 +49,10 @@ export class SchemaService {
 
   async findAll(req): Promise<any> {
     try {
-      await this.checkSchema(req.params.name)
+      const modelObject = await this.checkSchema(req.params.name)
       const query = req.query || {}
       const collection = req.params.name
-      const dddd = await this.schemaAccessService.findAll(collection, ['code', 'name', 'description'], { active: true }, query)
+      const dddd = await this.schemaAccessService.findAll(collection, modelObject.fields, { active: true }, query)
       return dddd
     } catch (error) {
       console.error('Error in schema -> findAll:', error);
@@ -45,28 +60,28 @@ export class SchemaService {
     }
   }
 
-  async save(modelName, data): Promise<SetModule | undefined> {
+  async save(modelName, data, user): Promise<SetModule | undefined> {
     try {
       await this.checkSchema(modelName)
       const found = await this.dynamicModelService.findOne(modelName, { name: data.name })
       if (found) {
         throw new BadRequestException('Өмнө бүртгэгдсэн байна.');
       }
-      return await this.dynamicModelService.save(modelName, data)
+      return await this.dynamicModelService.save(modelName, data, user)
     } catch (error) {
       console.error('Error in schema -> save:', error);
       return error;
     }
   }
 
-  async put(modelName, data): Promise<any> {
+  async put(modelName, data, user): Promise<any> {
     try {
       await this.checkSchema(modelName)
       const found = await this.dynamicModelService.findOne(modelName, { _id: data._id })
       if (!found) {
         throw new BadRequestException('Бүртгэл олдсонгүй.');
       }
-      const ddd = await this.dynamicModelService.updateOne(modelName, data)
+      const ddd = await this.dynamicModelService.updateOne(modelName, data, user)
       return { success: true }
     } catch (error) {
       console.error('Error in schema -> save:', error);

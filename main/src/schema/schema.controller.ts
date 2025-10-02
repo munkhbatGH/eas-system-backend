@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards, Request, Post, Delete } from '@nestjs/common';
 import { SchemaService } from './schema.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { User } from 'src/auth/decorator/user.decorator';
 
 @Controller('schema')
 export class SchemaController {
@@ -22,14 +23,14 @@ export class SchemaController {
 
   @UseGuards(AuthGuard)
   @Post('/post/:name')
-  async post(@Request() req): Promise<any | undefined> {
-    return await this.schemaService.save(req.params.name, req.body)
+  async post(@Request() req, @User() user): Promise<any | undefined> {
+    return await this.schemaService.save(req.params.name, req.body, user)
   }
 
   @UseGuards(AuthGuard)
   @Post('/put/:name')
-  async put(@Request() req): Promise<any | undefined> {
-    return await this.schemaService.put(req.params.name, req.body)
+  async put(@Request() req, @User() user): Promise<any | undefined> {
+    return await this.schemaService.put(req.params.name, req.body, user)
   }
 
   @UseGuards(AuthGuard)

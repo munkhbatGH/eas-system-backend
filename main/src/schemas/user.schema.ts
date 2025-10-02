@@ -5,7 +5,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ column: true })
+  @Prop({ column: true, short: true, label: 'Хэрэглэгч' })
   name: string;
 
   @Prop()

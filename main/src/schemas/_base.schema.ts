@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 
 @Schema()
 export class BaseSchema {
@@ -6,10 +7,16 @@ export class BaseSchema {
   @Prop({ default: new Date() })
   createdDate: Date;
 
+  @Prop({ label: 'Бүртгэсэн', type: 'ObjectID', ref: 'User', short: true, column: true, lookup: true, lookupProject: ['name'] })
+  createdUserId: ObjectId;
+
   @Prop({})
   updatedDate: Date;
 
   @Prop({})
+  updatedUserId: ObjectId;
+
+  @Prop({ default: true })
   active: boolean;
 
   @Prop({})
@@ -17,4 +24,7 @@ export class BaseSchema {
 
   @Prop({})
   deletedDate: Date;
+
+  @Prop({})
+  deletedUserId: ObjectId;
 }
