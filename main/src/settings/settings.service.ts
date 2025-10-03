@@ -18,7 +18,7 @@ export class SettingsService {
         {$unwind: { path: '$menu', preserveNullAndEmptyArrays: true}},
         {$project: {
           _id: 1,
-          menu: { _id: '$menu._id', parentId: '$menu.parentId', code: '$menu.code', name: '$menu.name', order: '$menu.order', moduleId: '$menu.moduleId', path: '$menu.path' },
+          menu: { _id: '$menu._id', parentId: '$menu.parentId', code: '$menu.code', name: '$menu.name', order: '$menu.order', moduleId: '$menu.moduleId', path: '$menu.path', icon: '$menu.icon' },
         }},
       ]).toArray()
       const parentList = menus.filter(a => a.menu && !a.menu.parentId)
