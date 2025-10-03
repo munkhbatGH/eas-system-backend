@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { BaseSchema } from './_base.schema';
+import { ObjectId } from 'mongodb';
 
 export type SetActionDocument = SetAction & Document;
 
@@ -12,8 +13,8 @@ export class SetAction extends BaseSchema {
   @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text', short: true })
   name: string;
 
-  @Prop({ column: true, label: 'Тайлбар', sortable: false, filterable: true, filterType: 'text' })
-  desc: string;
+  @Prop({ label: 'Цэс', type: 'ObjectID', ref: 'SetMenu', short: true, column: true, lookup: true, lookupProject: ['name'], sortable: false, filterable: false, filterType: 'ObjectId' })
+  menuId: ObjectId;
 
   constructor(item: Partial<SetAction>) {
     super()

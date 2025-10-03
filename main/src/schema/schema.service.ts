@@ -14,6 +14,9 @@ const ModelObjects = {
   'SetMenu': {
     fields: ['parent', 'code', 'name', 'description', 'createdDate', 'createdUserId']
   },
+  'SetAction': {
+    fields: ['menuId', 'code', 'name', 'createdDate', 'createdUserId']
+  },
   'SetRole': {
     fields: ['code', 'name', 'description', 'menuList']
   }
@@ -63,6 +66,20 @@ export class SchemaService {
     }
   }
 
+  async findAllById(req): Promise<any> {
+    try {
+      const modelObject = await this.checkSchema(req.params.name)
+      const query = req.query || {}
+      const collection = req.params.name
+      const filter = { active: true, menuId: new ObjectId(req.params.id) }
+      const dddd = await this.schemaAccessService.findAll(collection, modelObject.fields, filter, query)
+      return dddd
+    } catch (error) {
+      console.error('Error in schema -> findAll:', error);
+      throw error;
+    }
+  }
+
   async save(modelName, data, user): Promise<SetModule | undefined> {
     try {
       await this.checkSchema(modelName)
@@ -73,7 +90,7 @@ export class SchemaService {
       return await this.dynamicModelService.save(modelName, data, user)
     } catch (error) {
       console.error('Error in schema -> save:', error);
-      return error;
+      throw error;
     }
   }
 
@@ -88,7 +105,7 @@ export class SchemaService {
       return { success: true }
     } catch (error) {
       console.error('Error in schema -> save:', error);
-      return error;
+      throw error;
     }
   }
 
@@ -104,7 +121,7 @@ export class SchemaService {
       return ddd
     } catch (error) {
       console.error('Error in schema -> delete:', error);
-      return error;
+      throw error;
     }
   }
 }

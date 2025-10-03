@@ -20,6 +20,11 @@ export class SchemaController {
   async getList(@Request() req): Promise<any[]> {
     return await this.schemaService.findAll(req)
   }
+  @UseGuards(AuthGuard)
+  @Get('/list/:name/:id')
+  async getListById(@Request() req): Promise<any[]> {
+    return await this.schemaService.findAllById(req)
+  }
 
   @UseGuards(AuthGuard)
   @Post('/post/:name')

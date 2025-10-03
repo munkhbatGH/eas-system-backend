@@ -23,9 +23,6 @@ export class SetMenu extends BaseSchema {
   @Prop({ label: 'Модуль', type: 'ObjectID', ref: 'SetModule', short: true, column: true, lookup: true, lookupProject: ['name'], sortable: false, filterable: false, filterType: 'ObjectId' })
   moduleId: ObjectId;
 
-  @Prop({ column: true, type: [{ type: Object }], label: 'Цэс', sortable: false, filterable: false, filterType: 'array', allowed: true })
-  menuList: Array<any>;
-
   constructor(item: Partial<SetMenu>) {
     super()
     Object.assign(this, item)
