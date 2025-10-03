@@ -5,11 +5,12 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ column: true, short: true, label: 'Хэрэглэгч' })
+  @Prop({ column: true, short: true, label: 'Хэрэглэгч', sortable: false, filterable: true, filterType: 'text' })
   name: string;
 
   @Prop()
   password: string;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
