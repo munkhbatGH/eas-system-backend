@@ -7,6 +7,9 @@ export type SetMenuDocument = SetRole & Document;
 @Schema()
 export class SetRole extends BaseSchema {
 
+  @Prop({ column: true, label: 'Бүлэг', sortable: false, filterable: true, filterType: 'text' })
+  group: string;
+
   @Prop({ column: true, label: 'Код', sortable: false, filterable: true, filterType: 'text' })
   code: string;
 

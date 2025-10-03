@@ -58,10 +58,28 @@ export class SchemaService {
       const modelObject = await this.checkSchema(req.params.name)
       const query = req.query || {}
       const collection = req.params.name
-      const dddd = await this.schemaAccessService.findAll(collection, modelObject.fields, { active: true }, query)
-      return dddd
+      let result: any = null
+      if (req.query && req.query.nolimit) {
+        result = await this.schemaAccessService.findAllNoLimit(collection, modelObject.fields, { active: true }, query)
+      } else {
+        result = await this.schemaAccessService.findAll(collection, modelObject.fields, { active: true }, query)
+      }
+      return result
     } catch (error) {
       console.error('Error in schema -> findAll:', error);
+      throw error;
+    }
+  }
+
+  async findAllNoLimit(req): Promise<any> {
+    try {
+      const modelObject = await this.checkSchema(req.params.name)
+      const query = req.query || {}
+      const collection = req.params.name
+      const dddd = await this.schemaAccessService.findAllNoLimit(collection, modelObject.fields, { active: true }, query)
+      return dddd
+    } catch (error) {
+      console.error('Error in schema -> findAllNoLimit:', error);
       throw error;
     }
   }

@@ -157,6 +157,35 @@ export class SchemaAccessService {
     }
   }
 
+  async findAllNoLimit(modelName, fields, filter, query) {
+    const { collectionName }: SchemaObjectConfig = this.getSchema(modelName);
+    const aggregation = this.findAggregation(modelName, fields, [{ $match: filter }], {})
+
+    const mainAggregation: any[] = []
+    mainAggregation.push(
+      {
+        $facet: {
+          rows: aggregation,
+          totalCount: [{ $count: 'count'}]
+        }
+      }
+    )
+    const aggregateResults = await this.connection.collection(collectionName).aggregate(mainAggregation).toArray()
+
+    const result = helper.data(aggregateResults)
+    const list: any[] = result.rows
+
+    const promises: any[] = []
+    list.forEach((a) => {
+      promises.push(this.lookup(a, this.getLookupColumns(modelName, [], true)))
+    })
+
+    return {
+      total: result.count,
+      list: await Promise.all(promises)
+    }
+  }
+
   async findOne(collection, fields, filter, exclude = []) {
     const { collectionName }: SchemaObjectConfig = this.getSchema(collection);
     const limit = 1
