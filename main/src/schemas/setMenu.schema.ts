@@ -8,13 +8,13 @@ export type SetMenuDocument = SetMenu & Document;
 @Schema()
 export class SetMenu extends BaseSchema {
 
-  @Prop({ column: true, label: 'Parent', sortable: false, filterable: true, filterType: 'text'  })
-  parent: string;
+  @Prop({ label: 'Parent', type: 'ObjectID', ref: 'SetMenu', short: true, column: true, lookup: true, lookupProject: ['name'], sortable: false, filterable: false, filterType: 'ObjectId' })
+  parentId: ObjectId;
 
-  @Prop({ column: true, label: 'Код', sortable: false, filterable: true, filterType: 'text'  })
+  @Prop({ column: true, label: 'Код', sortable: false, filterable: true, filterType: 'text' })
   code: string;
 
-  @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text'  })
+  @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text', short: true })
   name: string;
 
   @Prop({ column: true, label: 'Дараалал', sortable: false, filterable: false, filterType: 'text' })
