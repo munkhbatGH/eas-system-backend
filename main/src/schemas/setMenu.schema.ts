@@ -17,8 +17,8 @@ export class SetMenu extends BaseSchema {
   @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text'  })
   name: string;
 
-  @Prop({ column: true, label: 'Тайлбар', sortable: false, filterable: true, filterType: 'text' })
-  desc: string;
+  @Prop({ column: true, label: 'Дараалал', sortable: false, filterable: false, filterType: 'text' })
+  order: number;
 
   @Prop({ label: 'Модуль', type: 'ObjectID', ref: 'SetModule', short: true, column: true, lookup: true, lookupProject: ['name'], sortable: false, filterable: false, filterType: 'ObjectId' })
   moduleId: ObjectId;
