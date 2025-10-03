@@ -32,7 +32,7 @@ export class DynamicModelService {
       await doc.save();
       return doc;
     } catch (error) {
-      return undefined;
+      throw error
     }
   }
 
@@ -45,7 +45,7 @@ export class DynamicModelService {
       return { success: result.modifiedCount > 0, data };
     } catch (error) {
       console.error('-error -> DynamicModelService-updateOne---', error);
-      return error;
+      throw error
     }
   }
 
@@ -56,7 +56,7 @@ export class DynamicModelService {
       return { success: result.modifiedCount > 0 };
     } catch (error) {
       console.error('-error -> DynamicModelService-updateOne---', error);
-      return error;
+      throw error
     }
   }
 

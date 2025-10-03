@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { BaseSchema } from './_base.schema';
+import { ObjectId } from 'mongodb';
 
 export type SetMenuDocument = SetRole & Document;
 
@@ -19,7 +19,7 @@ export class SetRole {
   @Prop({ column: true, label: 'Тайлбар', sortable: false, filterable: true, filterType: 'text' })
   desc: string;
 
-  @Prop({ column: true, type: [{ type: Object }], label: 'Цэс', sortable: false, filterable: false, filterType: 'array', allowed: true })
+  @Prop({ column: true, type: [{ type: ObjectId }], label: 'Цэс', sortable: false, filterable: false, filterType: 'array', allowed: true })
   menuList: Array<any>;
 
 }

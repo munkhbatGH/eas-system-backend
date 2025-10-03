@@ -7,6 +7,7 @@ import { modules } from './modules';
 import { KafkaModule } from './kafka/kafka.module';
 import { QraphqlClient } from './graphql/graphql.provider';
 import { DatabaseModule } from './database/database.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DatabaseModule } from './database/database.module';
 
     KafkaModule,
     QraphqlClient,
+    SettingsModule,
   ],
   controllers: controllers,
   providers: services,

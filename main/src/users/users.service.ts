@@ -38,7 +38,7 @@ export class UsersService {
       return await this.dynamicModelService.save(modelName, user, null)
     } catch (error) {
       console.log('---error---', error);
-      return undefined;
+      throw error
     }
   }
 

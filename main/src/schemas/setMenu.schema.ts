@@ -17,6 +17,9 @@ export class SetMenu extends BaseSchema {
   @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text', short: true })
   name: string;
 
+  @Prop({ column: true, label: 'Зам', sortable: false, filterable: true, filterType: 'text', short: true })
+  path: string;
+
   @Prop({ column: true, label: 'Дараалал', sortable: false, filterable: false, filterType: 'text' })
   order: number;
 
