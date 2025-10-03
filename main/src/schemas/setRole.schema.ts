@@ -5,7 +5,7 @@ import { BaseSchema } from './_base.schema';
 export type SetMenuDocument = SetRole & Document;
 
 @Schema()
-export class SetRole extends BaseSchema {
+export class SetRole {
 
   @Prop({ column: true, label: 'Бүлэг', sortable: false, filterable: true, filterType: 'text' })
   group: string;
@@ -22,10 +22,6 @@ export class SetRole extends BaseSchema {
   @Prop({ column: true, type: [{ type: Object }], label: 'Цэс', sortable: false, filterable: false, filterType: 'array', allowed: true })
   menuList: Array<any>;
 
-  constructor(item: Partial<SetRole>) {
-    super()
-    Object.assign(this, item)
-  }
 }
 
 export const SetRoleSchema = SchemaFactory.createForClass(SetRole);
