@@ -83,7 +83,7 @@ export class SchemaService {
   async save(modelName, data, user): Promise<SetModule | undefined> {
     try {
       await this.checkSchema(modelName)
-      const found = await this.dynamicModelService.findOne(modelName, { name: data.name })
+      const found = await this.dynamicModelService.findOne(modelName, { name: data.name, active: true })
       if (found) {
         throw new BadRequestException('Өмнө бүртгэгдсэн байна.');
       }
