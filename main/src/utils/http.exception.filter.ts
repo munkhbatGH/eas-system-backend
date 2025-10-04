@@ -30,6 +30,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         error = responseObj.error || error;
       }
     }
+    console.log('---message---', message)
+    console.log('---error---', error)
+    console.log('---request.url---', request.url)
 
     response.status(status).json({
       // success: false,

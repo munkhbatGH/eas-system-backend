@@ -22,6 +22,9 @@ export class SetRole {
   @Prop({ column: true, type: [{ type: ObjectId }], label: 'Цэс', sortable: false, filterable: false, filterType: 'array', allowed: true })
   menuList: Array<any>;
 
+  @Prop({ default: true })
+  active: boolean;
+  
 }
 
 export const SetRoleSchema = SchemaFactory.createForClass(SetRole);
