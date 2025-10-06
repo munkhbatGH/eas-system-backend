@@ -17,12 +17,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
     let error = 'InternalError';
+    let errors: any = null
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const res = exception.getResponse();
 
-      if (typeof res === 'string') {
+      if (res['message'] instanceof Array) { // Zod error
+        errors = res['message']
+        message = 'Zod error'
+      } else if (typeof res === 'string') {
         message = res;
       } else if (typeof res === 'object' && res !== null) {
         const responseObj = res as Record<string, any>;
@@ -40,6 +44,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       // timestamp: new Date().toISOString(),
       // path: request.url,
       message,
+      errors,
       error,
     });
   }
