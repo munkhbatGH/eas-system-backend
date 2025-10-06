@@ -5,12 +5,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './utils/http.exception.filter';
 import cookieParser from 'cookie-parser';
+import { LogRequestInterceptor } from './log-request/log-request.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalInterceptors(app.get(LogRequestInterceptor));
 
   app.use(cookieParser());
 
@@ -22,7 +24,7 @@ async function bootstrap() {
       ];
     
       if (!origin || allowedOrigins.includes(origin)) {
-        console.log('✅ Allowed by CORS:', origin);
+        // console.log('✅ Allowed by CORS:', origin);
         callback(null, true);
       } else {
         console.warn('⛔ Blocked by CORS:', origin);
@@ -36,6 +38,7 @@ async function bootstrap() {
       'Authorization',
       'Accept',
       'ngrok-skip-browser-warning', // ✅ Add this!
+      'current-page',
     ],
     exposedHeaders: ['Set-Cookie'],
     preflightContinue: false,
