@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Document } from 'mongoose';
 
-export type LogRequestDocument = LogRequest & Document;
+export type LogActivityDocument = LogActivity & Document;
 
 @Schema()
-export class LogRequest {
+export class LogActivity {
 
   @Prop({})
   method: string;
@@ -26,4 +26,4 @@ export class LogRequest {
   createdUserId: ObjectId;
 }
 
-export const LogRequestSchema = SchemaFactory.createForClass(LogRequest);
+export const LogActivitySchema = SchemaFactory.createForClass(LogActivity);

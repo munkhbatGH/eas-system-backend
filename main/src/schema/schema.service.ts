@@ -19,7 +19,12 @@ const ModelObjects = {
   },
   'SetRole': {
     fields: ['code', 'name', 'description', 'menuList']
-  }
+  },
+
+  // HR
+  'HrOrganization': {
+    fields: ['code', 'name', 'phone', 'addressList', 'permitted']
+  },
 }
 
 @Injectable()

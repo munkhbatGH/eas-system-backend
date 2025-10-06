@@ -1,6 +1,6 @@
 import { Device, DeviceSchema } from "./schemas/device.schema";
 import { HrOrganization, HrOrganizationSchema } from "./schemas/hrOrganization.schema";
-import { LogRequest, LogRequestSchema } from "./schemas/logRequest";
+import { LogActivity, LogActivitySchema } from "./schemas/logActivity";
 import { SetAction, SetActionSchema } from "./schemas/setAction.schema";
 import { SetMenu, SetMenuSchema } from "./schemas/setMenu.schema";
 import { SetModule, SetModuleSchema } from "./schemas/setModule.schema";
@@ -20,5 +20,5 @@ export const Schemas:TypeSchemas[] = [
     { name: SetRole.name, schema: SetRoleSchema },
     { name: SetAction.name, schema: SetActionSchema },
     { name: HrOrganization.name, schema: HrOrganizationSchema },
-    { name: LogRequest.name, schema: LogRequestSchema },
+    { name: LogActivity.name, schema: LogActivitySchema },
 ]

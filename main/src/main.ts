@@ -5,14 +5,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './utils/http.exception.filter';
 import cookieParser from 'cookie-parser';
-import { LogRequestInterceptor } from './log-request/log-request.interceptor';
+import { LogActivityInterceptor } from './log-activity/log-activity.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(app.get(LogRequestInterceptor));
+  app.useGlobalInterceptors(app.get(LogActivityInterceptor));
 
   app.use(cookieParser());
 
