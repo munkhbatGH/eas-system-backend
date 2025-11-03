@@ -4,10 +4,10 @@ import configuration from './config/configuration';
 import { controllers } from './controllers';
 import { services } from './services';
 import { modules } from './modules';
-import { KafkaModule } from './kafka/kafka.module';
-import { QraphqlClient } from './graphql/graphql.provider';
 import { DatabaseModule } from './database/database.module';
 import { SettingsModule } from './settings/settings.module';
+import { QraphqlClient } from './thirdparty/graphql/graphql.provider';
+import { KafkaModule } from './thirdparty/kafka/kafka.module';
 
 @Module({
   imports: [

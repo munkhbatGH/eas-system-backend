@@ -1,11 +1,11 @@
 import { AuthModule } from "./auth/auth.module";
-import { DynamicModelModule } from "./dynamic-model/dynamic-model.module";
-import { ElasticSearchModule } from "./elasticsearch/elasticsearch.module";
+import { DynamicModelModule } from "./core/dynamic-model/dynamic-model.module";
+import { SchemaModule } from "./core/schema/schema.module";
 import { LogActivityModule } from "./log-activity/log-request.module";
 import { HrModule } from "./modules/hr/hr.module";
-import { RedisModule } from "./redis/redis.module";
-import { SchemaModule } from "./schema/schema.module";
 import { SettingsModule } from "./settings/settings.module";
+import { ElasticSearchModule } from "./thirdparty/elasticsearch/elasticsearch.module";
+import { RedisModule } from "./thirdparty/redis/redis.module";
 import { UsersModule } from "./users/users.module";
 
 export const modules = [

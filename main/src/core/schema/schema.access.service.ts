@@ -4,7 +4,7 @@ import mongoose, { Connection } from 'mongoose';
 const { ObjectId } = require('mongodb')
 import moment from 'moment';
 const _ = require('lodash')
-var helper = require('../utils/helper')
+var helper = require('../../utils/helper')
 
 export interface SchemaObjectConfig {
   schema: any[];

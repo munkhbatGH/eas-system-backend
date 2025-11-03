@@ -14,10 +14,11 @@ export class LogActivityInterceptor implements NestInterceptor {
 
     if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
       const bb = { method, url, fromUrl: request.headers['current-page'], body: JSON.stringify(body) }
-      this.logService.saveLog(user, bb);
+      if (user) {
+        this.logService.saveLog(user, bb);
+      }
     }
 
     return next.handle().pipe(tap());
   }
 }
-  

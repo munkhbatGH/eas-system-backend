@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards, Request, Post, Delete } from '@nestjs/common';
 import { SchemaService } from './schema.service';
-import { AuthGuard } from '../auth/auth.guard';
 import { User } from 'src/auth/decorator/user.decorator';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('schema')
 export class SchemaController {

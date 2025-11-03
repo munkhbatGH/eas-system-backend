@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Connection } from 'mongoose';
-import { DynamicModelService } from 'src/dynamic-model/dynamic-model.service';
+import { DynamicModelService } from 'src/core/dynamic-model/dynamic-model.service';
 import { User } from 'src/schemas/user.schema';
 import { hashString } from 'src/utils/bcrypt';
 

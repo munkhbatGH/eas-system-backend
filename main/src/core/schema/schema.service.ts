@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchemaAccessService, SchemaObjectConfig } from './schema.access.service';
 import { SetModule } from 'src/schemas/setModule.schema';
-import { DynamicModelService } from 'src/dynamic-model/dynamic-model.service';
 import { ObjectId } from 'mongodb';
+import { DynamicModelService } from 'src/core/dynamic-model/dynamic-model.service';
 
 const ModelObjects = {
   'User': {
