@@ -55,3 +55,13 @@ Ngrok
 - # ngrok http 4000
 - # ngrok start --config ngrok.yml api
 
+
+
+### Add User to MONGODB
+
+```sh
+    - mongosh
+    - use eas-db
+
+    - db.createUser({ user: "admin", pwd: "P@ss!23456", roles: [ { role: "readWrite", db: "eas-db" }] })
+```

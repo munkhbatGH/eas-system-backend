@@ -10,17 +10,24 @@ import { Schemas } from 'src/schemas';
     // Connect to MongoDB
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('DB_URI') + '/' + configService.get<string>('DB_NAME'),
-        onConnectionCreate: (connection: Connection) => {
-          connection.on('connected', () => console.log('connected'));
-          connection.on('open', () => console.log('open'));
-          connection.on('disconnected', () => console.log('disconnected'));
-          connection.on('reconnected', () => console.log('reconnected'));
-          connection.on('disconnecting', () => console.log('disconnecting'));
-          return connection;
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const user = configService.get<string>('DB_USER');
+        const pass = encodeURIComponent(configService.get<string>('DB_PASS') ?? '');
+        const host = configService.get<string>('DB_HOST');
+        const port = configService.get<string>('DB_PORT');
+        const db   = configService.get<string>('DB_NAME');
+        return {
+          uri: `mongodb://${user}:${pass}@${host}:${port}/${db}?authSource=${db}`,
+          onConnectionCreate: (connection: Connection) => {
+            connection.on('connected', () => console.log('connected'));
+            connection.on('open', () => console.log('open'));
+            connection.on('disconnected', () => console.log('disconnected'));
+            connection.on('reconnected', () => console.log('reconnected'));
+            connection.on('disconnecting', () => console.log('disconnecting'));
+            return connection;
+          },
+        };
+      },
       inject: [ConfigService],
     }),
 
