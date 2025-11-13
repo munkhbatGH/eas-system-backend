@@ -12,7 +12,7 @@ export class HrOrganization extends BaseSchema {
   @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text', short: true })
   name: string;
 
-  @Prop({ column: true, label: 'Нэр', sortable: false, filterable: true, filterType: 'text', short: true })
+  @Prop({ column: true, label: 'Холбоо барих утас', sortable: false, filterable: true, filterType: 'text', short: true })
   phone: string;
 
   @Prop({ column: true, type: [{ type: Object }], label: 'Хаяг', sortable: false, filterable: false, filterType: 'array', allowed: true })
@@ -20,6 +20,9 @@ export class HrOrganization extends BaseSchema {
 
   @Prop({ default: true })
   permitted: boolean;
+
+  @Prop({ default: true })
+  paid: boolean;
 
   constructor(item: Partial<HrOrganization>) {
     super()
