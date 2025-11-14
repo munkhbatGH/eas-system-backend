@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Context, Query, Resolver } from '@nestjs/graphql';
-import { Public } from 'src/auth/decorator/public.decorator';
+import { Public } from 'src/modules/auth/decorator/public.decorator';
 
 @Resolver()
 export class HelloResolver {

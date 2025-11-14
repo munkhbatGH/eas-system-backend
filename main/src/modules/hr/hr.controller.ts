@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards, Request, Post } from '@nestjs/common';
 import { HrService } from './hr.service';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { User } from 'src/auth/decorator/user.decorator';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
+import { User } from 'src/modules/auth/decorator/user.decorator';
 
 @Controller('hr')
 export class HrController {

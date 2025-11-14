@@ -13,7 +13,7 @@ import { modules } from './modules';
       envFilePath: '.env-development',
       load: [configuration],
     }),
-    ...modules,
+    ...modules
   ],
   controllers: controllers,
   providers: services,

@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiBasicAuth } from '@nestjs/swagger';
-import { Public } from './auth/decorator/public.decorator';
+import { Public } from 'src/modules/auth/decorator/public.decorator';
 
 @Controller()
 export class AppController {

@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './utils/http.exception.filter';
 import cookieParser from 'cookie-parser';
-import { LogActivityInterceptor } from './log-activity/log-activity.interceptor';
+import { LogActivityInterceptor } from './modules/log-activity/log-activity.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
